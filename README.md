@@ -115,9 +115,12 @@ example). This script encodes that knowledge so you don't have to
 rediscover it by leaking something first.
 
 **I found a secret field this script misses. What do I do?**
-Please open an issue or a PR — this project exists because that exact
-thing has happened before (see CHANGELOG) and each report makes it better
-for the next person.
+This is a small side project without active maintenance — I built it to
+solve my own problem and can't commit to reviewing issues or PRs in a
+timely way. The code is short and readable; the easiest fix is to fork it
+and add the tag yourself (see `EXACT_SECRET_TAGS` in the script). PRs are
+welcome if you want to contribute back, but there's no guarantee of a
+response.
 
 ## Disclaimer
 

@@ -48,4 +48,7 @@
 This history exists because every one of these gaps was found by actually
 running the tool against a real, complex pfSense config and manually
 auditing the "redacted" output against the original — not by inspecting
-the code in isolation. If you find another gap, please report it.
+the code in isolation. This project isn't actively maintained, so if you
+find another gap, the fastest path is to fork the repo and fix it
+yourself — contributions back via PR are welcome but not guaranteed a
+timely review.
