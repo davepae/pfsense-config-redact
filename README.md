@@ -70,6 +70,19 @@ further, especially the `installedpackages` section for any third-party
 package you have installed.** Treat this as a first pass, not a final
 answer.
 
+## Disclaimer
+
+This tool is provided as-is, with no warranty of any kind. It is a
+best-effort pattern matcher, not a security guarantee — see "What it won't
+catch" above. **You are solely responsible for reviewing the output and for
+what you choose to share publicly.** The author is not responsible for any
+secrets, credentials, or other sensitive information that this tool fails
+to redact, or for any consequences of publishing a config file sanitized
+(or not) with this tool.
+
+If you're sharing a config publicly, read the redacted file yourself first.
+
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE). The license's standard "no warranty" clause
+covers the software; the disclaimer above is about how you use it.
