@@ -1,12 +1,27 @@
 # pfsense-config-redact
 
-Sanitize a pfSense `config.xml` backup before sharing it — with a forum, an
-LLM, a coworker, wherever. Strips passwords, private keys, API tokens, PSKs,
-and other secrets pfSense stores in plaintext, while leaving the structure
-intact so the file is still useful for troubleshooting or reference.
+A Python script to **redact secrets from a pfSense `config.xml` backup**
+before posting it to a forum, pasting it into an LLM for troubleshooting
+help, or sharing it with a coworker. Strips passwords, private keys, API
+tokens, pre-shared keys, and other credentials pfSense stores in plaintext
+in its config export — while keeping the file's structure intact so it's
+still useful for debugging.
 
 Runs entirely locally. Standard library only, no dependencies, no network
-access.
+access, nothing leaves your machine.
+
+## Why this exists
+
+pfSense's `config.xml` backup is one big XML file with everything in it:
+your admin password hash, VPN pre-shared keys and private keys, Dynamic DNS
+API tokens, ACME/Let's Encrypt provider credentials, SNMP community
+strings, SSH host keys, and — if you use it — the encryption password
+protecting your Auto Config Backup archive. People regularly post this file
+on the Netgate forum, r/PFsense, or paste it into ChatGPT/Claude for help
+diagnosing a config issue, without realizing how much of it is live
+credentials rather than just settings. This script is meant to make "share
+your config for help" safe by default instead of something you have to get
+right by hand every time.
 
 ## Usage
 
@@ -69,6 +84,40 @@ find:
 further, especially the `installedpackages` section for any third-party
 package you have installed.** Treat this as a first pass, not a final
 answer.
+
+## FAQ
+
+**How do I get my config.xml off pfSense?**
+Diagnostics → Backup & Restore → Download configuration. Save it somewhere
+on the machine you'll run this script from.
+
+**Does this work with OPNsense too?**
+No — OPNsense's config.xml uses a different (though related) tag schema,
+and this script's tag list is built specifically from pfSense's field
+names. Running it against an OPNsense config would miss most secrets.
+Contributions to add OPNsense support are welcome.
+
+**Will this catch everything sensitive in my config?**
+No tool can guarantee that for arbitrary free-text fields. It catches every
+known pfSense secret tag (including ones wrapped in `<![CDATA[...]]>`,
+which earlier versions of this script missed — see CHANGELOG), plus
+flags other suspicious-looking values for manual review. Always read the
+`.redacted.xml` output yourself before sharing it, especially if you run
+third-party packages (pfBlockerNG, ACME, Telegram/Pushover notifications,
+Cloudflare DDNS, etc.) with their own credential fields.
+
+**Why not just use `sed`/`grep` to strip out `<password>` tags myself?**
+You can, but pfSense wraps many fields in CDATA sections, uses inconsistent
+tag names across packages for conceptually similar secrets (API keys,
+tokens, account IDs), and some genuinely secret fields don't have "password"
+or "secret" in the name at all (an Auto Config Backup `device_key`, for
+example). This script encodes that knowledge so you don't have to
+rediscover it by leaking something first.
+
+**I found a secret field this script misses. What do I do?**
+Please open an issue or a PR — this project exists because that exact
+thing has happened before (see CHANGELOG) and each report makes it better
+for the next person.
 
 ## Disclaimer
 
